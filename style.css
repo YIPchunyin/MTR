@@ -6,6 +6,7 @@
 }
 .max_box{
     width: 80%;
+    /* height: 100vh; */
     /* background-color: yellow; */
     margin: auto;
 }
@@ -16,7 +17,6 @@
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center; 
-    height: 20%;
 }
 .MTR{
     color: black;
@@ -30,13 +30,13 @@ input{
     height: 50px;
     border-radius: 20px;
     font-size: 1.2rem;
-    margin: 10px;
     background-color: transparent;
+    margin: 10px;
     /* font-weight: bold; */
 }
 .sta_box{
-    width: 200px;
-    height: 150px;
+    width: 150px;
+    height: 100px;
     background: black;
     margin: 20px;
     padding: 20px;
@@ -47,6 +47,7 @@ input{
     flex-direction: column;
     text-align: left;
     border-radius: 20px;
+    font-size: 1rem;
 }
 .sta_max_box{
     width: 100%;
