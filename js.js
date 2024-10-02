@@ -179,6 +179,7 @@ const locations = {
     "Yau Ma Tei": "油麻地",
     "Mong Kok": "旺角",
     "Price Edward": "太子",
+    "Prince Edward": "太子",
     "Edward": "太子",
     "Shek Kip Mei": "石碣尾",
     "Kowloon Tong": "九龍塘",
