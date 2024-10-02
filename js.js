@@ -240,7 +240,7 @@ async function showOneLine(element){
         const staBox = document.createElement('div');
         staBox.className = 'sta_box';
         staBox.style.background = clickColor
-        const stationInfo = [`${allSta[index].name}`, `${hours}:${minutes}`, `開出月臺：${plat}`, ``, ``];
+        const stationInfo = [`${allSta[index].name}`, `${hours}:${minutes}`, `月臺：${plat}`, ``, ``];
         stationInfo.forEach(info => {
             const p = document.createElement('p');
             p.textContent = info;
