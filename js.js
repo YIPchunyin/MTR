@@ -367,7 +367,7 @@ async function showOneLine(element){
 
 
                 if (minutesDiff2 < 1) stationInfo.push('正在進站')
-                else if(minutesDiff2>60) stationInfo.push(time1.split(' ')[1].substring(0, 5))
+                else if(minutesDiff2>60) stationInfo.push(time2.split(' ')[1].substring(0, 5))
                 else stationInfo.push(`${minutesDiff2}Mins`)
                 stationInfo.forEach(info => {
                     const p = document.createElement('p');
