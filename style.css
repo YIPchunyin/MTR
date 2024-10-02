@@ -35,11 +35,11 @@ input{
     /* font-weight: bold; */
 }
 .sta_box{
-    width: 150px;
+    width: 170px;
     height: 100px;
     background: black;
-    margin: 20px;
-    padding: 20px;
+    margin: 10px;
+    padding: 10px;
     color: white;
     display: flex;
     justify-content: center;
@@ -47,7 +47,7 @@ input{
     flex-direction: column;
     text-align: left;
     border-radius: 20px;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 .sta_max_box{
     width: 100%;
