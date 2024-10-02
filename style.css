@@ -49,6 +49,11 @@ input{
     border-radius: 20px;
     font-size: 0.9rem;
 }
+
+.sta_box p:nth-child(1),.sta_box p:nth-child(2){
+    font-weight: bold;
+    font-size: 1.2rem;
+}
 .sta_max_box{
     width: 100%;
     display: flex;
@@ -57,4 +62,19 @@ input{
 }
 .NewTime{
     text-align: center;
+}
+
+@media (max-width: 768px) {
+    input{
+        width: 100px;
+        height: 40px;
+    }
+    .sta_box{
+        width: 145px;
+        margin: 5px;
+        padding: 0px;
+    }
+    .sta_max_box{
+        justify-content: space-evenly;
+    }
 }
