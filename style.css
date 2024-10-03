@@ -69,7 +69,7 @@ input{
     width: 50%;
     text-align: center;
     padding: 20px;
-    font-size:0.9rem;
+    font-size:1.5rem;
 }
 
 .sta_UP{
@@ -116,6 +116,7 @@ input{
     }
     .UP_direction,.DOWN_direction{
         width: 50%;
+        font-size: 1rem;
     }
 }
 
