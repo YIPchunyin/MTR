@@ -327,10 +327,10 @@ async function showOneLine(element){
         return;
     }
     isRunning = true;
-    let sta_UP = document.querySelector('.sta_UP');
-    sta_UP.style.width = '50%';
-    let sta_DOWN = document.querySelector('.sta_DOWN');
-    sta_UP.style.width = '50%';
+    // let sta_UP = document.querySelector('.sta_UP');
+    // sta_UP.style.width = '50%';
+    // let sta_DOWN = document.querySelector('.sta_DOWN');
+    // sta_DOWN.style.width = '50%';
     //重置各綫路按鈕
     reseetingInput();
     //移除所有到站時間通知div
