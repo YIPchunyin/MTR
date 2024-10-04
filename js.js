@@ -402,12 +402,12 @@ async function showOneLine(element){
         }
         
     }
-    sta_DOWN = document.querySelector('.sta_DOWN');
-    if (!sta_DOWN || sta_DOWN.children.length === 0) {
-        sta_DOWN.style.width = '0%';
-        const sta_UP = document.querySelector('.sta_UP');
-        sta_UP.style.width = '100%';
-    }
+    // sta_DOWN = document.querySelector('.sta_DOWN');
+    // if (!sta_DOWN || sta_DOWN.children.length === 0) {
+    //     sta_DOWN.style.width = '0%';
+    //     const sta_UP = document.querySelector('.sta_UP');
+    //     sta_UP.style.width = '100%';
+    // }
     isRunning = false
 }
 ready()
