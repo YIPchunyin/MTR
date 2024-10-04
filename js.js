@@ -274,7 +274,18 @@ const locations = {
     "Hang Hau": "坑口",
     "Po Lam": "寶琳"
 };
-
+let numList = {
+    "1":"①",
+    "2":"②",
+    "3":"③",
+    "4":"④",
+    "5":"⑤",
+    "6":"⑥",
+    "7":"⑦",
+    "8":"⑧",
+    "9":"⑨",
+    "10":"⑩",
+}
 
 
 let abortController = new AbortController();
@@ -360,23 +371,23 @@ async function showOneLine(element){
                     let oneData = jsData.data[direction][dArry[d]]
                     let time1 =  oneData[0].time
                     let time2 =  oneData[1].time
-                    let plat1 =  oneData[0].plat
-                    let plat2 =  oneData[1].plat
+                    let plat1 =  numList[oneData[0].plat] 
+                    let plat2 =  numList[oneData[1].plat] 
                     let minutesDiff1 = getMins(time1)
                     let minutesDiff2 = getMins(time2)
-    
+                    
                     const staBox = document.createElement('div');
                     staBox.className = 'sta_box';
                     staBox.style.background = clickColor
                     // console.log(allSta[index].name,locations[allSta[index].name])
                     let stationInfo = [`${locations[allSta[index].name]}`];
-                    if (minutesDiff1 < 1) {stationInfo.push('正在進站')}
+                    if (minutesDiff1 < 1) {stationInfo.push(`正在進站 ${plat1}`)}
                     else if(minutesDiff1 > 60){stationInfo.push(time1.split(' ')[1].substring(0, 5))}
-                    else {stationInfo.push(`${minutesDiff1}Mins`)}
+                    else {stationInfo.push(`${minutesDiff1}Mins  ${plat1}` )}
     
-                    if (minutesDiff2 < 1) {stationInfo.push('正在進站')}
+                    if (minutesDiff2 < 1) {stationInfo.push(`正在進站 ${plat2}`)}
                     else if(minutesDiff2 > 60) {stationInfo.push(time2.split(' ')[1].substring(0, 5))}
-                    else{stationInfo.push(`${minutesDiff2}Mins`)} 
+                    else{stationInfo.push(`${minutesDiff2}Mins  ${plat2}`)} 
                     stationInfoList.push(stationInfo)
                     stationInfo.forEach(info => {
                         const p = document.createElement('p');
