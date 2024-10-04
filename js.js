@@ -356,7 +356,7 @@ async function showOneLine(element) {
             const res = await fetch(api);
             let jsData = await res.json();
             document.querySelector('.NewTime').textContent = '最新更新時間為：' + String(jsData.sys_time);
-
+            console.log(jsData)
             let direction = Object.keys(jsData.data)[0];
             const dArry = ['UP', 'DOWN'];
             for (let d in dArry) {
@@ -399,7 +399,7 @@ async function showOneLine(element) {
                         });
                         document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
                     } else {
-                        if (dArry[d] == 'UP' && index  == allSta.length-1){
+                        if ((dArry[d] == 'UP' && index  == allSta.length-1) || (dArry[d] == 'DOWN' && index  == 0)){
 
                         }
                         else{
