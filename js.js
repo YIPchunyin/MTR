@@ -312,6 +312,7 @@ function getStaMex(){
 let isRunning = false
 async function showOneLine(element){
     if (isRunning) {
+        // alert('請稍後')
         return;
     }
     isRunning = true;
@@ -333,7 +334,7 @@ async function showOneLine(element){
     //修改點擊的按鈕顔色
     element.style.background = clickColor
     element.style.color = "#ffffff"
-    console.log('点击了',element.value,element.text)
+    // console.log('点击了',element.value,element.text)
     let TargetLine = element.text
     // console.log(line[TargetLine])
     let allSta = line[TargetLine].sta
@@ -344,14 +345,14 @@ async function showOneLine(element){
 
     stationInfoList = []
     for (index in allSta){
-        console.log(allSta[index].code,allSta[index].name)
+        // console.log(allSta[index].code,allSta[index].name)
         let sta = allSta[index].code
         try{
             const api = `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${TargetLine}&sta=${sta}&lang=TC`;
             const res = await fetch(api)
             jsData = await res.json()
             document.querySelector('.NewTime').textContent ='最新更新時間為：'+String(jsData.sys_time) 
-            console.log( jsData)
+            // console.log( jsData)
             let direction = Object.keys(jsData.data)[0]
             const dArry = ['UP','DOWN']
             for (d in dArry){
@@ -367,7 +368,7 @@ async function showOneLine(element){
                     const staBox = document.createElement('div');
                     staBox.className = 'sta_box';
                     staBox.style.background = clickColor
-                    console.log(allSta[index].name,locations[allSta[index].name])
+                    // console.log(allSta[index].name,locations[allSta[index].name])
                     let stationInfo = [`${locations[allSta[index].name]}`];
                     if (minutesDiff1 < 1) {stationInfo.push('正在進站')}
                     else if(minutesDiff1 > 60){stationInfo.push(time1.split(' ')[1].substring(0, 5))}
