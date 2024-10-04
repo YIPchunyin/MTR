@@ -288,7 +288,6 @@ let numList = {
 }
 
 
-let abortController = new AbortController();
 function reseetingInput(){
     const elements = document.querySelectorAll('input');
     elements.forEach(element => {
@@ -321,104 +320,108 @@ function getStaMex(){
     
 }
 let isRunning = false
-async function showOneLine(element){
+async function showOneLine(element) {
     if (isRunning) {
-        // alert('請稍後')
         return;
     }
     isRunning = true;
-    // let sta_UP = document.querySelector('.sta_UP');
-    // sta_UP.style.width = '50%';
-    // let sta_DOWN = document.querySelector('.sta_DOWN');
-    // sta_DOWN.style.width = '50%';
-    //重置各綫路按鈕
+
     reseetingInput();
-    //移除所有到站時間通知div
+
     const elements = document.querySelectorAll('.sta_box');
     elements.forEach(element => {
         element.remove();
-      });
-    //改logo顔色
-    let clickColor = line[element.text].color
-    const MTR = document.querySelector('.MTR');
-    MTR.style.color = clickColor
-    //修改點擊的按鈕顔色
-    element.style.background = clickColor
-    element.style.color = "#ffffff"
-    // console.log('点击了',element.value,element.text)
-    let TargetLine = element.text
-    // console.log(line[TargetLine])
-    let allSta = line[TargetLine].sta
-    document.querySelector('.UP_direction').textContent =  `往 ${locations[allSta[allSta.length-1].name]} 方向`
-    document.querySelector('.UP_direction').style.color =  clickColor
-    document.querySelector('.DOWN_direction').textContent =  `往 ${locations[allSta[0].name]} 方向`
-    document.querySelector('.DOWN_direction').style.color =  clickColor
+    });
 
-    stationInfoList = []
-    for (index in allSta){
-        // console.log(allSta[index].code,allSta[index].name)
-        let sta = allSta[index].code
-        try{
+    let clickColor = line[element.text].color;
+    const MTR = document.querySelector('.MTR');
+    MTR.style.color = clickColor;
+
+    element.style.background = clickColor;
+    element.style.color = "#ffffff";
+
+    let TargetLine = element.text;
+    let allSta = line[TargetLine].sta;
+
+    document.querySelector('.UP_direction').textContent = `往 ${locations[allSta[allSta.length - 1].name]} 方向`;
+    document.querySelector('.UP_direction').style.color = clickColor;
+    document.querySelector('.DOWN_direction').textContent = `往 ${locations[allSta[0].name]} 方向`;
+    document.querySelector('.DOWN_direction').style.color = clickColor;
+
+    stationInfoList = [];
+    for (let index in allSta) {
+        let sta = allSta[index].code;
+        try {
             const api = `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${TargetLine}&sta=${sta}&lang=TC`;
-            const res = await fetch(api)
-            jsData = await res.json()
-            document.querySelector('.NewTime').textContent ='最新更新時間為：'+String(jsData.sys_time) 
-            // console.log( jsData)
-            let direction = Object.keys(jsData.data)[0]
-            const dArry = ['UP','DOWN']
-            for (d in dArry){
-                if(jsData.data[direction].hasOwnProperty(`${dArry[d]}`)){
-                    let oneData = jsData.data[direction][dArry[d]]
-                    let time1 =  oneData[0].time
-                    let time2 =  oneData[1].time
-                    let plat1 =  numList[oneData[0].plat] 
-                    let plat2 =  numList[oneData[1].plat] 
-                    let minutesDiff1 = getMins(time1)
-                    let minutesDiff2 = getMins(time2)
-                    
-                    const staBox = document.createElement('div');
-                    staBox.className = 'sta_box';
-                    staBox.style.background = clickColor
-                    // console.log(allSta[index].name,locations[allSta[index].name])
-                    let stationInfo = [`${locations[allSta[index].name]}`];
-                    if (minutesDiff1 < 1) {stationInfo.push(`正在進站 ${plat1}`)}
-                    else if(minutesDiff1 > 60){stationInfo.push(time1.split(' ')[1].substring(0, 5))}
-                    else {stationInfo.push(`${minutesDiff1}Mins  ${plat1}` )}
-    
-                    if (minutesDiff2 < 1) {stationInfo.push(`正在進站 ${plat2}`)}
-                    else if(minutesDiff2 > 60) {stationInfo.push(time2.split(' ')[1].substring(0, 5))}
-                    else{stationInfo.push(`${minutesDiff2}Mins  ${plat2}`)} 
-                    stationInfoList.push(stationInfo)
-                    stationInfo.forEach(info => {
-                        const p = document.createElement('p');
-                        p.textContent = info;
-                        staBox.appendChild(p);
-                    });
-                    document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
+            const res = await fetch(api);
+            let jsData = await res.json();
+            document.querySelector('.NewTime').textContent = '最新更新時間為：' + String(jsData.sys_time);
+
+            let direction = Object.keys(jsData.data)[0];
+            const dArry = ['UP', 'DOWN'];
+            for (let d in dArry) {
+                if (jsData.data[direction].hasOwnProperty(`${dArry[d]}`)) {
+                    if (jsData.data[direction][`${dArry[d]}`].length !== 0) {
+                        let oneData = jsData.data[direction][dArry[d]];
+                        let time1 = oneData[0].time;
+                        let time2 = oneData[1].time;
+                        let plat1 = numList[oneData[0].plat];
+                        let plat2 = numList[oneData[1].plat];
+                        let minutesDiff1 = getMins(time1);
+                        let minutesDiff2 = getMins(time2);
+
+                        const staBox = document.createElement('div');
+                        staBox.className = 'sta_box';
+                        staBox.style.background = clickColor;
+
+                        let stationInfo = [`${locations[allSta[index].name]}`];
+                        if (minutesDiff1 < 1) {
+                            stationInfo.push(`正在進站 ${plat1}`);
+                        } else if (minutesDiff1 > 60) {
+                            stationInfo.push(time1.split(' ')[1].substring(0, 5));
+                        } else {
+                            stationInfo.push(`${minutesDiff1}Mins  ${plat1}`);
+                        }
+
+                        if (minutesDiff2 < 1) {
+                            stationInfo.push(`正在進站 ${plat2}`);
+                        } else if (minutesDiff2 > 60) {
+                            stationInfo.push(time2.split(' ')[1].substring(0, 5));
+                        } else {
+                            stationInfo.push(`${minutesDiff2}Mins  ${plat2}`);
+                        }
+
+                        stationInfoList.push(stationInfo);
+                        stationInfo.forEach(info => {
+                            const p = document.createElement('p');
+                            p.textContent = info;
+                            staBox.appendChild(p);
+                        });
+                        document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
+                    } else {
+                        if (dArry[d] == 'UP' && index  == allSta.length-1){
+
+                        }
+                        else{
+                            const staBox = document.createElement('div');
+                            staBox.className = 'sta_box';
+                            staBox.style.background = clickColor;
+                            let stationInfo = [`${locations[allSta[index].name]}`, '暫無車次'];
+                            stationInfo.forEach(info => {
+                                const p = document.createElement('p');
+                                p.textContent = info;
+                                staBox.appendChild(p);
+                            });
+                            document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
+                        }
+                        
+                    }
                 }
             }
+        } catch (error) {
+            console.error("Error fetching or processing data:", error);
         }
-        catch{
-                // const staBox = document.createElement('div');
-                // staBox.className = 'sta_box';
-                // staBox.style.background = clickColor
-                // let stationInfo = [`${locations[allSta[index].name]}`,'暫無資訊'];
-                // stationInfo.forEach(info => {
-                //     const p = document.createElement('p');
-                //     p.textContent = info;
-                //     staBox.appendChild(p);
-                // });
-                // document.querySelector('.sta_UP').appendChild(staBox);
-                // document.querySelector('.sta_DOWN').appendChild(staBox);
-        }
-        
     }
-    // sta_DOWN = document.querySelector('.sta_DOWN');
-    // if (!sta_DOWN || sta_DOWN.children.length === 0) {
-    //     sta_DOWN.style.width = '0%';
-    //     const sta_UP = document.querySelector('.sta_UP');
-    //     sta_UP.style.width = '100%';
-    // }
-    isRunning = false
+    isRunning = false;
 }
 ready()
