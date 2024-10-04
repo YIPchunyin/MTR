@@ -419,7 +419,7 @@ async function showOneLine(element) {
                 }
             }
         } catch (error) {
-            console.error("Error fetching or processing data:", error);
+            console.error("Error", error);
         }
     }
     isRunning = false;
