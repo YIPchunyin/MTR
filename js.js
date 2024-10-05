@@ -358,6 +358,7 @@ async function showOneLine(element) {
     // console.log(urlList)
         fetchAllData(urlList).then(allData => {
             try{
+                document.querySelector('.NewTime').textContent = '最新更新時間為：' + String(new Date());
                 for (let index in allData) {
                     console.log('---------------------')
                     console.log(allData[index].data)
