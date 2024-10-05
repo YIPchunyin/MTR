@@ -358,10 +358,10 @@ async function showOneLine(element) {
     // console.log(urlList)
         fetchAllData(urlList).then(allData => {
             try{
-                document.querySelector('.NewTime').textContent = '最新更新時間為：' + String(new Date());
                 for (let index in allData) {
                     console.log('---------------------')
                     console.log(allData[index].data)
+                    document.querySelector('.NewTime').textContent = '最新更新時間為：' + String(allData[index].sys_time);
                     let sta = Object.keys(allData[index].data)[0].split('-')[1]
                     let direction = Object.keys(allData[index].data)[0];
                     let sta_d = line[TargetLine]['sta'][index].name
