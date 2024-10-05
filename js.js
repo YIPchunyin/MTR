@@ -261,7 +261,7 @@ const locations = {
     "East Tsim Sha Tsui": "尖東",
     "Austin": "柯士甸",
     "Tsuen Wan West": "荃灣西",
-    "Kam Sheung Road": "感相道",
+    "Kam Sheung Road": "錦上路",
     "Yuen Long": "元朗",
     "Long Ping": "朗屏",
     "Tin Shui Wai": "天水圍",
@@ -316,9 +316,15 @@ function getMins(time){
     let timeDiff = targetTime.getTime() - currentTime.getTime();
     return Math.floor(timeDiff / (1000 * 60));
 }
-function getStaMex(){
-    
+
+async function fetchAllData(apiList) {
+    const asyncTasks = apiList.map(async (url) => {
+        const response = await fetch(url);
+        return await response.json();
+    });
+    return await Promise.all(asyncTasks);
 }
+
 let isRunning = false
 async function showOneLine(element) {
     if (isRunning) {
@@ -347,81 +353,103 @@ async function showOneLine(element) {
     document.querySelector('.UP_direction').style.color = clickColor;
     document.querySelector('.DOWN_direction').textContent = `往 ${locations[allSta[0].name]} 方向`;
     document.querySelector('.DOWN_direction').style.color = clickColor;
+    let urlList = []
+    for (let index in allSta) urlList.push(`https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${TargetLine}&sta=${allSta[index].code}`)
+    // console.log(urlList)
+        fetchAllData(urlList).then(allData => {
+            try{
+                for (let index in allData) {
+                    console.log('---------------------')
+                    console.log(allData[index].data)
+                    let sta = Object.keys(allData[index].data)[0].split('-')[1]
+                    let direction = Object.keys(allData[index].data)[0];
+                    let sta_d = line[TargetLine]['sta'][index].name
+                    console.log(sta_d,'65465',locations[sta_d])
+                    const dArry = ['UP', 'DOWN'];
+                    for (let d in dArry) {
+                        if (allData[index].data[direction].hasOwnProperty(`${dArry[d]}`)) {
+                            if (allData[index].data[direction][`${dArry[d]}`].length !== 0) {
+                                let oneData = allData[index].data[direction][dArry[d]];
+                                const staBox = document.createElement('div');
+                                staBox.className = 'sta_box';
+                                staBox.style.background = clickColor;
+                                let stationInfo = [`${locations[sta_d]}`];
+                                let time1 = oneData[0].time;
+                                let plat1 = numList[oneData[0].plat];
+                                let minutesDiff1 = getMins(time1);
+                                if (minutesDiff1 < 1) {
+                                    stationInfo.push(`正在進站 ${plat1}`);
+                                } else if (minutesDiff1 > 60) {
+                                    stationInfo.push(time1.split(' ')[1].substring(0, 5)+` ${plat1}`);
+                                } else {
+                                    stationInfo.push(`${minutesDiff1}Mins  ${plat1}`);
+                                }
+                                if (oneData.length>1){
+                                    // if(oneData[0].dest != oneData[1].dest){
+                                    //     sta1Code = line[TargetLine]['sta'][allData.length-2].code
+                                    //     sta1Name = locations[line[TargetLine]['sta'][allData.length-2].name]
+                                    //     sta2Code = line[TargetLine]['sta'][allData.length-1].code
+                                    //     sta2Name = locations[line[TargetLine]['sta'][allData.length-1].name] 
+                                    //     console.log(sta1Code,sta1Name,sta2Code,sta2Name)
+                                    //     let obj = {
+                                    //         sta1Code: sta1Name,
+                                    //         sta2Code: sta2Name,
+                                    //     }
+                                    //     let theFinaSta = oneData[0].dest
+                                    //     console.log(typeof sta1Code,typeof theFinaSta)
+                                    //     if(sta1Code===theFinaSta) console.log( sta1Code, theFinaSta)
 
-    stationInfoList = [];
-    for (let index in allSta) {
-        let sta = allSta[index].code;
-        try {
-            const api = `https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=${TargetLine}&sta=${sta}&lang=TC`;
-            const res = await fetch(api);
-            let jsData = await res.json();
-            document.querySelector('.NewTime').textContent = '最新更新時間為：' + String(jsData.sys_time);
-            console.log(jsData)
-            let direction = Object.keys(jsData.data)[0];
-            const dArry = ['UP', 'DOWN'];
-            for (let d in dArry) {
-                if (jsData.data[direction].hasOwnProperty(`${dArry[d]}`)) {
-                    if (jsData.data[direction][`${dArry[d]}`].length !== 0) {
-                        let oneData = jsData.data[direction][dArry[d]];
+                                    //     // console.log(obj.keys+'**********')
+                                    //     stationInfo.push(`${obj[String(oneData[0].dest)]}方向`);
+                                    // }
+                                    let time2 = oneData[1].time;
+                                    let plat2 = numList[oneData[1].plat];
+                                    let minutesDiff2 = getMins(time2);
+                                    if (minutesDiff2 < 1) {
+                                        stationInfo.push(`正在進站 ${plat2}`);
+                                    } else if (minutesDiff2 > 60) {
+                                        stationInfo.push(time2.split(' ')[1].substring(0, 5)+` ${plat2}`);
+                                    } else {
+                                        stationInfo.push(`${minutesDiff2}Mins  ${plat2}`);
+                                    }
 
-
-                        const staBox = document.createElement('div');
-                        staBox.className = 'sta_box';
-                        staBox.style.background = clickColor;
-                        let stationInfo = [`${locations[allSta[index].name]}`];
-                        let time1 = oneData[0].time;
-                        let plat1 = numList[oneData[0].plat];
-                        let minutesDiff1 = getMins(time1);
-                        if (minutesDiff1 < 1) {
-                            stationInfo.push(`正在進站 ${plat1}`);
-                        } else if (minutesDiff1 > 60) {
-                            stationInfo.push(time1.split(' ')[1].substring(0, 5)+` ${plat1}`);
-                        } else {
-                            stationInfo.push(`${minutesDiff1}Mins  ${plat1}`);
-                        }
-                        if (oneData.length>1){
-                            let time2 = oneData[1].time;
-                            let plat2 = numList[oneData[1].plat];
-                            let minutesDiff2 = getMins(time2);
-                            if (minutesDiff2 < 1) {
-                                stationInfo.push(`正在進站 ${plat2}`);
-                            } else if (minutesDiff2 > 60) {
-                                stationInfo.push(time2.split(' ')[1].substring(0, 5)+` ${plat2}`);
+                                }
+                                stationInfo.forEach(info => {
+                                    const p = document.createElement('p');
+                                    p.textContent = info;
+                                    staBox.appendChild(p);
+                                });
+                                document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
                             } else {
-                                stationInfo.push(`${minutesDiff2}Mins  ${plat2}`);
+                                if ((dArry[d] == 'UP' && index  == allSta.length-1) || (dArry[d] == 'DOWN' && index  == 0)){
+        
+                                }
+                                else{
+                                    const staBox = document.createElement('div');
+                                    staBox.className = 'sta_box';
+                                    staBox.style.background = clickColor;
+                                    let stationInfo = [`${locations[sta_d]}`, '暫無車次'];
+                                    stationInfo.forEach(info => {
+                                        const p = document.createElement('p');
+                                        p.textContent = info;
+                                        staBox.appendChild(p);
+                                    });
+                                    document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
+                                }
+                                
                             }
                         }
-                        stationInfoList.push(stationInfo);
-                        stationInfo.forEach(info => {
-                            const p = document.createElement('p');
-                            p.textContent = info;
-                            staBox.appendChild(p);
-                        });
-                        document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
-                    } else {
-                        if ((dArry[d] == 'UP' && index  == allSta.length-1) || (dArry[d] == 'DOWN' && index  == 0)){
-
-                        }
-                        else{
-                            const staBox = document.createElement('div');
-                            staBox.className = 'sta_box';
-                            staBox.style.background = clickColor;
-                            let stationInfo = [`${locations[allSta[index].name]}`, '暫無車次'];
-                            stationInfo.forEach(info => {
-                                const p = document.createElement('p');
-                                p.textContent = info;
-                                staBox.appendChild(p);
-                            });
-                            document.querySelector(`.sta_${dArry[d]}`).appendChild(staBox);
-                        }
-                        
                     }
+                    
+        
+        
                 }
             }
-        } catch (error) {
-            console.error("Error", error);
+            catch{
+
+            }
         }
-    }
+    )
     isRunning = false;
 }
 ready()
